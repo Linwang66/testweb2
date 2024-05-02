@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 问答系统</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        .chat-header {
+            background-color: #0057e7;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .chat-window {
+            height: 300px;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+        .output {
+            margin-bottom: 10px;
+        }
+        .input-area {
+            padding: 10px;
+            display: flex;
+            border-top: 1px solid #ccc;
+        }
+        .input-area input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+        .input-area button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .input-area button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <h1>向 AI 提问</h1>
+        </header>
+        <div class="chat-window">
+            <div class="output"></div> <!-- 用于展示问答对话 -->
+        </div>
+        <div class="input-area">
+            <input type="text" id="question" placeholder="请输入您的问题">
+            <button onclick="askQuestion()">提交</button>
+        </div>
+    </div>
+
+    <script>
+        function askQuestion() {
+            const question = document.getElementById('question').value;
+            fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const output = document.querySelector('.output');
+                output.innerHTML += `<p><strong>问题:</strong> ${question}</p>`;
+                output.innerHTML += `<p><strong>答案:</strong> ${data.answer}</p>`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
